@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Theme tokens. `data-theme` is set on <html> by useTheme.ts and persisted
+  to localStorage. Everything else in the app reads these through the
+  Tailwind color names defined in tailwind.config.ts (ink, fg, dim, surface,
+  brand.*) — no component needs to know which theme is active.
+*/
+:root,
+[data-theme="dark"] {
+  --color-ink: 17 11 9;
+  --color-fg: 246 246 248;
+  --color-dim: 154 154 168;
+  --color-surface: 255 255 255; /* glass-panel tint: white-on-dark */
+  --color-amber: 255 138 61;
+  --color-magenta: 230 56 136;
+  --color-ember: 201 67 46;
+  --color-green: 61 220 132;
+}
+
+[data-theme="light"] {
+  --color-ink: 250 247 243;
+  --color-fg: 26 20 16;
+  --color-dim: 108 99 92;
+  --color-surface: 20 14 10; /* glass-panel tint: dark-on-light */
+  --color-amber: 199 91 20;
+  --color-magenta: 176 27 96;
+  --color-ember: 163 53 36;
+  --color-green: 18 122 68;
+}
+
+/*
+  A few bespoke effects live here as real classes instead of Tailwind's
+  arbitrary-value bracket syntax (e.g. `bg-[conic-gradient(...)]`).
+  Arbitrary values are fine for simple one-offs, but for anything this
+  specific — gradients driven by CSS variables, custom masks — a named
+  class in a real stylesheet is easier to read and safer to maintain.
+*/
+
+@layer utilities {
+  .bg-woven {
+    background-image: repeating-linear-gradient(45deg, rgb(var(--color-surface) / 0.06) 0 1px, transparent 1px 46px),
+      repeating-linear-gradient(-45deg, rgb(var(--color-surface) / 0.06) 0 1px, transparent 1px 46px);
+  }
+
+  .mask-fade-top {
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  .mask-fade-x {
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  }
+
+  /* Cursor-reactive 3D tilt for project cards — see components/ui/TiltCard.tsx */
+  .tilt-card {
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.2s ease;
+  }
+}
